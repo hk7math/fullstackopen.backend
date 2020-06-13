@@ -66,6 +66,16 @@ app.post('/api/persons', (req, res) => {
     return res.status(400).json({
       error: 'name missing'
     })
+  } else if (persons.some(person => person.name === body.name)) {
+    return res.status(403).json({
+      error: 'duplicated name'
+    })
+  }
+  
+  if (!body.number) {
+    return res.status(400).json({
+      error: 'number missing'
+    })
   }
 
   const person = {
