@@ -1,7 +1,11 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
+morgan.token('body', (req) => JSON.stringify(req.body).replace('{}','-'))
+
 app.use(express.json())
+app.use(morgan(`:method :url :status :res[content-length] - :response-time ms :body`))
 
 let persons = [
   { 
@@ -27,12 +31,10 @@ let persons = [
 ]
 
 app.get('/api/persons', (req, res) => {
-  console.log(`${persons.length} records sent`)
   res.json(persons)
 })
 
 app.get('/info', (req, res) => {
-  console.log(`Info is called`)
   res.send(`
     <p>Phonebook has info for ${persons.length} people</p>
     <p>${new Date()}</p>
@@ -43,10 +45,8 @@ app.get('/api/persons/:id', (req, res) => {
   const id = req.params.id|0
   const person = persons.find(p => p.id===id)
   if (person){
-    console.log(`Person ${id} is called`)
     res.json(person)
   } else {
-    console.log(`Person ${id} not found`)
     res.status(404).end()
   }
 })
@@ -54,13 +54,11 @@ app.get('/api/persons/:id', (req, res) => {
 app.delete('/api/persons/:id', (req, res) => {
   const id = req.params.id|0
   persons = persons.filter(p => p.id!==id)
-  console.log(`Person ${id} is removed`)
   res.status(204).end()
 })
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
-  console.log(`Data received: `,body)
   
   if (!body.name) {
     return res.status(400).json({
@@ -77,15 +75,14 @@ app.post('/api/persons', (req, res) => {
       error: 'number missing'
     })
   }
-
+  
   const person = {
     name: body.name,
     number: body.number,
-    id: Math.floor(Math.random()*1e10)
+    id: Math.floor(Math.random()*1e6)
   }
 
   persons = persons.concat(person)
-  console.log(`${body.name} is added`)
   res.json(person)
 })
 
