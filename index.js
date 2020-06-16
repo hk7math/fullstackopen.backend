@@ -28,19 +28,22 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-  Person.find({_id: req.params.id})
-    .then(persons => {
-      const person = persons[0]
-      if (person){
+  Person.findById(req.params.id)
+    .then(person => {
+      if (person) {
         res.json(person)
       } else {
         res.status(404).end()
       }
     })
+    .catch(err => {
+      console.log(err)
+      res.status(400).end({error: 'malformatted id'})
+    })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-  Person.deleteOne({_id: req.params.id})
+  Person.findByIdAndRemove(req.params.id)
     .then(() => {
       res.status(204).end()
     })
