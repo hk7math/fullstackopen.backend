@@ -65,25 +65,17 @@ app.post('/api/persons', (req, res, next) => {
       error: 'number missing'
     })
   }
-  
-  Person.find({name: body.name})
-  .then(persons => {
-    if (persons.length > 0){
-        return res.status(403).json({
-          error: 'duplicated name'
-        })
-      }
-    })
 
   const person = new Person({
     name: body.name,
     number: body.number,
   })
 
-  person.save().then(savedPerson => {
-    res.json(savedPerson)
-  })
-  .catch(err => next(err))
+  person.save()
+    .then(savedPerson => {
+      res.json(savedPerson)
+    })
+    .catch(err => next(err))
 
 })
 
@@ -106,6 +98,8 @@ const errorHandler = (err, req, res, next) => {
 
   if (err.name === 'CastError') {
     return res.status(400).send({error: 'malformatted id'})
+  } else if (err.name === 'ValidationError') {
+    return res.status(400).send({error: err.message})
   }
 
   next(error)
