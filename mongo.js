@@ -10,7 +10,7 @@ const password = process.argv[2]
 const url =
   `mongodb+srv://fullstack:${password}@cluster0-ehoq0.mongodb.net/phonebook?retryWrites=true`
 
-mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const personSchema = new mongoose.Schema({
   name: String,
@@ -32,7 +32,7 @@ if (process.argv.length < 5) {
     name: process.argv[3],
     number: process.argv[4],
   })
-  
+
   person.save().then(res => {
     console.log(`added ${res.name} number ${res.number} to phonebook`)
     mongoose.connection.close()

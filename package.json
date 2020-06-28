@@ -10,7 +10,8 @@
     "build:ui": "rmdir build /s /q && cd ../part && npm run build && xcopy build ..\\backend\\build /s /e /y /i",
     "deploy": "git push heroku master -f",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "lint": "eslint ."
   },
   "author": "Matti Luukkainen",
   "license": "MIT",
@@ -23,6 +24,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^7.3.1",
     "nodemon": "^2.0.4"
   }
 }

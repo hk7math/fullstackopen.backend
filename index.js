@@ -14,21 +14,21 @@ app.use(morgan(`:method :url :status :res[content-length] - :response-time ms :b
 
 app.get('/api/persons', (req, res, next) => {
   Person.find({})
-  .then(persons => {
-    res.json(persons)
-  })
-  .catch(err => next(err))
+    .then(persons => {
+      res.json(persons)
+    })
+    .catch(err => next(err))
 })
 
 app.get('/info', (req, res, next) => {
   Person.find({})
-  .then(persons => {
-    res.send(`
-    <p>Phonebook has info for ${persons.length} people</p>
-    <p>${new Date()}</p>
-    `)
-  })
-  .catch(err => next(err))
+    .then(persons => {
+      res.send(`
+      <p>Phonebook has info for ${persons.length} people</p>
+      <p>${new Date()}</p>
+      `)
+    })
+    .catch(err => next(err))
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
@@ -48,21 +48,21 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .then(() => {
       res.status(204).end()
     })
-    .catch(err => next(err))  
+    .catch(err => next(err))
 })
 
 app.post('/api/persons', (req, res, next) => {
   const body = req.body
-  
+
   if (!body.name) {
     return res.status(400).json({
-      error: 'name missing'
+      error: 'name missing',
     })
   }
-  
+
   if (!body.number) {
     return res.status(400).json({
-      error: 'number missing'
+      error: 'number missing',
     })
   }
 
@@ -80,7 +80,7 @@ app.post('/api/persons', (req, res, next) => {
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
-  Person.findByIdAndUpdate(req.params.id, {number: req.body.number}, {new: true, runValidators: true})
+  Person.findByIdAndUpdate(req.params.id, { number: req.body.number }, { new: true, runValidators: true })
     .then(updatedRes => {
       res.json(updatedRes)
     })
@@ -88,7 +88,7 @@ app.put('/api/persons/:id', (req, res, next) => {
 })
 
 const unknownEndpoint = (req, res) => {
-  res.status(404).send({error: 'unknown endpoint'})
+  res.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
@@ -97,12 +97,12 @@ const errorHandler = (err, req, res, next) => {
   console.log(err.message)
 
   if (err.name === 'CastError') {
-    return res.status(400).send({error: 'malformatted id'})
-  } else if (err.name === 'ValidationError') {
-    return res.status(400).json({error: err.message})
+    return res.status(400).send({ error: 'malformatted id' })
+  } else if (err.name === 'Validation ') {
+    return res.status(400).json({ error: err.message })
   }
 
-  next(error)
+  next(err)
 }
 
 app.use(errorHandler)
